@@ -14,7 +14,7 @@ ref*.mat: reference pixels, with and without GACOS tropospheric corretion (Yu et
     
 TSA_ifg_ds.mat: the time series data on deformation area, downsampled by ratio 10 for quick data sharing
     
-Semi.mat: store the semi-variogram fitting (Webster & Oliver, 2007) results using the GBIS software (Bagnardi & Hooper, 2018), later used as the covariance matrix. Here, the sill values of the mainshock interferogram is mannually set as the avarage values of all other interferograms, as the significant coseismic deformations greatly bias the estimation.
+semi_fit.mat: store the semi-variogram fitting (Webster & Oliver, 2007) results using the GBIS software (Bagnardi & Hooper, 2018), later used as the covariance matrix. Here, the sill values of the mainshock interferogram is mannually set as the avarage values of all other interferograms, as the significant coseismic deformations greatly bias the estimation.
     
 runTSA.m: the main function
     
