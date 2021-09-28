@@ -64,14 +64,14 @@ if nargin>1
     ym=LOS';
 
     %   Get SLC acquisition time
-    slclist=dir('./Export*/rslc/*.rslc');
+    load('slclist');
     slclist(drop_ifgidx)=[];
     n_slc=size(slclist,1);
     slcday=zeros(n_slc,1);
     sat_UTC=load('./parms_aps.mat','UTC_sat');
     sat_UTC=sat_UTC.UTC_sat;
     for i=1:n_slc
-        slcday(i)=datenum([slclist(i).name(1:8) sat_UTC],'yyyymmddHH:MM');
+        slcday(i)=datenum([slclist{i}(1:8) sat_UTC],'yyyymmddHH:MM');
     end
 
     %   Load bp and time
@@ -82,8 +82,8 @@ if nargin>1
     [n_obs,n_pixel]=size(ym);
     yday=365.25;
     year=t/yday;
-    year=year+str2num(slclist(1).name(1:4))+(str2num(slclist(1).name(5:6))-1)/12 ...
-        +str2num(slclist(1).name(7:8))/yday;   
+    year=year+str2num(slclist{1}(1:4))+(str2num(slclist{1}(5:6))-1)/12 ...
+        +str2num(slclist{1}(7:8))/yday;   
     
     %   Multi-earthquakes
     n_eq=size(EQ_UTC,1);
@@ -124,14 +124,18 @@ if nargin>1
             A(:,end-1)=t;
             A(:,end)=1;
 
-            x=linsolve(A,ym);
+            x=(A'*P*A)\A'*P*ym;
             y=A*x;
             
+            Qmm=inv(A'*P*A);
             EQ_def=x(1:n_eq,:);
-            rms=sqrt(sum((y-ym).^2)/n_obs);
+            sigma=zeros(2+n_eq,n_pixel);
+            for i=1:n_pixel
+                rms(i)=(y(:,i)-ym(:,i))'*P*(y(:,i)-ym(:,i));
+                sigma(:,i)=sqrt(diag(Qmm)*rms(i)/n_obs);
+                rms(i)=sqrt(rms(i)/sum(P,'all'));
+            end
             mae=sum(abs(y-ym))/n_obs;
-            Qmm=inv(A'*A);
-            sigma=sqrt(diag(Qmm))*rms;
             
         % Coseismic, interseismic, and DEM error
         case {'cid'}
@@ -170,15 +174,18 @@ if nargin>1
             A(:,n_eq+6)=1;
             A(:,n_eq+7)=bp;
             
-            x=(A'*A)\A'*ym;
+            x=(A'*P*A)\A'*P*ym;
             y=A*x;
             
-            x(n_eq+1,:)=x(n_eq+1,:)/yday;
+            Qmm=inv(A'*P*A);
             EQ_def=x(1:n_eq,:);
-            rms=sqrt(sum((y-ym).^2)/n_obs);
+            sigma=zeros(7+n_eq,n_pixel);
+            for i=1:n_pixel
+                rms(i)=(y(:,i)-ym(:,i))'*P*(y(:,i)-ym(:,i));
+                sigma(:,i)=sqrt(diag(Qmm)*rms(i)/n_obs);
+                rms(i)=sqrt(rms(i)/sum(P,'all'));
+            end
             mae=sum(abs(y-ym))/n_obs;
-            Qmm=inv(A'*A);
-            sigma=sqrt(diag(Qmm))*rms;
             
         % Coseismic, interseismic, DEM error, and postseismic
         case {'cidp'}
@@ -195,14 +202,18 @@ if nargin>1
             A(:,n_eq+3)=1;
             A(:,n_eq+4)=bp;
             
-            x=linsolve(A,ym);
+            x=(A'*P*A)\A'*P*ym;
             y=A*x;
             
+            Qmm=inv(A'*P*A);
             EQ_def=x(1:n_eq,:);
-            rms=sqrt(sum((y-ym).^2)/n_obs);
+            sigma=zeros(4+n_eq,n_pixel);
+            for i=1:n_pixel
+                rms(i)=(y(:,i)-ym(:,i))'*P*(y(:,i)-ym(:,i));
+                sigma(:,i)=sqrt(diag(Qmm)*rms(i)/n_obs);
+                rms(i)=sqrt(rms(i)/sum(P,'all'));
+            end
             mae=sum(abs(y-ym))/n_obs;
-            Qmm=inv(A'*A);
-            sigma=sqrt(diag(Qmm))*rms;
 
         %   Apply Maximum likelihood estimation (MLE)
         case {'cidp_mle'}
