@@ -2,7 +2,7 @@
 
 INTRODUCTION:
 
-The shared code and data here is an example used for coseismic deforamtion field reconstruction via InSAR time series fitting. InSAR data was processed by LiCSAR (Lazecky et al., 2020) and StaMPS software (Hooper et al., 2007), using the descending track 006 InSAR time series data from Oct 2014 to Sep 2019 in Iran. We used this data to detect and model the shallow earthquakes happened in Iran, following the Mw 7.3 mainshaock in 2017.
+The shared code and data here is an example used for coseismic deforamtion field reconstruction via InSAR time series fitting. InSAR data was processed by LiCSAR (Lazecky et al., 2020) and StaMPS software (Hooper et al., 2007), using the descending track 006 InSAR time series data from Oct 2014 to Sep 2019 in Iran. We used this data to detect and model the shallow earthquakes happened in Iran, following the Mw 7.3 mainshock in 2017.
 
 FILES:
 
