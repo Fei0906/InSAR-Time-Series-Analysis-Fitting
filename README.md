@@ -6,7 +6,7 @@ The shared code and data here is an example used for coseismic deforamtion field
 
 FILES:
 
-Export: contains some empty files that used to read the SLC date during the programm
+slclist: the dates of SLC images 
     
 parms_aps.mat: StaMPS file, here is used to read the UTC time of the acquistion time
     
